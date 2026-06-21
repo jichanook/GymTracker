@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<h2>Weight History</h2>
+
+<table class="table">
+
+<tr>
+<th>Date</th>
+<th>Weight</th>
+</tr>
+
+{% for weight in weights %}
+
+<tr>
+<td>{{ weight['timestamp'] }}</td>
+<td>{{ weight['weight'] }}</td>
+</tr>
+
+{% endfor %}
+
+</table>
+
+<hr>
+
+<h2>Workout History</h2>
+
+<table class="table">
+
+<tr>
+<th>Date</th>
+<th>Workout</th>
+</tr>
+
+{% for workout in workouts %}
+
+<tr>
+<td>{{ workout['workout_date'] }}</td>
+<td>{{ workout['workout_type'] }}</td>
+</tr>
+
+{% endfor %}
+
+</table>
+
+{% endblock %}

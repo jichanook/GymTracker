@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<h2>{{ workout_type }}</h2>
+
+<form method="POST" action="/save_workout">
+
+<input type="hidden" name="workout_type" value="{{ workout_type }}">
+
+{% for exercise, sets in exercises.items() %}
+
+<hr>
+
+<h4>{{ exercise }}</h4>
+
+{% for set_num in range(1, sets + 1) %}
+
+<div class="row mb-2">
+
+<div class="col">
+<input type="number" step="0.5" class="form-control"
+placeholder="Weight"
+name="{{ exercise }}_weight_{{ set_num }}">
+</div>
+
+<div class="col">
+<input type="number" class="form-control"
+placeholder="Reps"
+name="{{ exercise }}_reps_{{ set_num }}">
+</div>
+
+</div>
+
+{% endfor %}
+
+{% endfor %}
+
+<button type="submit" class="btn btn-primary">
+Save Workout
+</button>
+
+</form>
+
+{% endblock %}

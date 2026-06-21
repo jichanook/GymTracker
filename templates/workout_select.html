@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<h2>Select Workout</h2>
+
+<div class="d-grid gap-3">
+
+{% for workout in workouts %}
+
+<a href="/workout/{{ workout }}"
+class="btn btn-success btn-lg">
+
+{{ workout }}
+
+</a>
+
+{% endfor %}
+
+</div>
+
+{% endblock %}
