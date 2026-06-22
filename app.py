@@ -9,41 +9,41 @@ app.secret_key = "gymtracker-secret-key"
 WORKOUTS = {
 
 "Upper A": {
-    "Incline DB Press": 4,
-    "Machine Chest Press": 3,
-    "Shoulder Press": 3,
-    "Cable Lateral Raise": 4,
-    "Tricep Pushdown": 3,
-    "Overhead Tricep Extension": 3
+    "Incline DB Press (6 - 10)": 4,
+    "Machine Chest Press (8 - 12)": 3,
+    "Shoulder Press (6 - 10)": 3,
+    "Cable Lateral Raise (12 - 20)": 4,
+    "Tricep Pushdown (10 - 15)": 3,
+    "Overhead Tricep Extension (10 - 15)": 3
 },
 
 "Lower A": {
-    "Back Squat": 4,
-    "Romanian Deadlift": 4,
-    "Bulgarian Split Squat": 3,
-    "Leg Curl": 3,
-    "Standing Calf Raise": 4,
-    "Hanging Leg Raise": 3
+    "Back Squat (6 - 10)": 4,
+    "Romanian Deadlift (8 - 12)": 4,
+    "Bulgarian Split Squat (8 - 12)": 3,
+    "Leg Curl (10 - 15)": 3,
+    "Standing Calf Raise (10 - 20)": 4,
+    "Hanging Leg Raise (10 - 20)": 3
 },
 
 "Upper B": {
-    "Pull Ups": 4,
-    "Single Arm Cable Pulldown": 3,
-    "Chest Supported Row": 4,
-    "Face Pull": 3,
-    "Incline DB Curl": 3,
-    "Hammer Curl": 3,
-    "Cable Lateral Raise": 3
+    "Pull Ups (6 - 10)": 4,
+    "Single Arm Cable Pulldown (10 - 15)": 3,
+    "Chest Supported Row (8 - 12)": 4,
+    "Face Pull (12 - 20)": 3,
+    "Incline DB Curl (10 - 15)": 3,
+    "Hammer Curl (10 - 15)": 3,
+    "Cable Lateral Raise (12 - 20)": 3
 },
 
 "Lower B": {
-    "Leg Press": 4,
-    "Walking Lunges": 3,
-    "Leg Curl": 3,
-    "Cable Lateral Raise": 4,
-    "Rear Delt Fly": 3,
-    "EZ Curl": 3,
-    "Skull Crusher": 3
+    "Leg Press (10 - 15)": 4,
+    "Walking Lunges (10 - 15)": 3,
+    "Leg Curl (10 - 15)": 3,
+    "Cable Lateral Raise (12 - 20)": 4,
+    "Rear Delt Fly (12 - 20)": 3,
+    "EZ Curl (8 - 12)": 3,
+    "Skull Crusher (8 - 12)": 3
 }
 
 }
