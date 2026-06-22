@@ -35,10 +35,21 @@
 
 {% for workout in workouts %}
 
-<tr>
-<td>{{ workout['workout_date'] }}</td>
-<td>{{ workout['workout_type'] }}</td>
-</tr>
+<li>
+
+{{ workout["workout_date"] }}
+-
+{{ workout["workout_type"] }}
+
+<a
+    href="/workout_history/{{ workout['id'] }}"
+    class="btn btn-sm btn-primary ms-2">
+
+    View
+
+</a>
+
+</li>
 
 {% endfor %}
 

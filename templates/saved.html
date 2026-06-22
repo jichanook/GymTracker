@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<h2>Workout Saved</h2>
+
+<p>Returning to home page...</p>
+
+<script>
+
+localStorage.clear();
+
+setTimeout(() => {
+    window.location = "/";
+}, 1000);
+
+</script>
+
+{% endblock %}

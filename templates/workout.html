@@ -14,6 +14,19 @@
 
 <h4>{{ exercise }}</h4>
 
+{% if exercise in previous_data %}
+
+<p>
+<b>Last workout:</b><br>
+
+{% for s in previous_data[exercise] %}
+{{ s }}<br>
+{% endfor %}
+
+</p>
+
+{% endif %}
+
 {% for set_num in range(1, sets + 1) %}
 
 <div class="row mb-2">
@@ -41,5 +54,31 @@ Save Workout
 </button>
 
 </form>
+
+<script>
+
+const inputs = document.querySelectorAll("input");
+
+inputs.forEach(input => {
+
+    const savedValue =
+        localStorage.getItem(input.name);
+
+    if(savedValue){
+        input.value = savedValue;
+    }
+
+    input.addEventListener("input", () => {
+
+        localStorage.setItem(
+            input.name,
+            input.value
+        );
+
+    });
+
+});
+
+</script>
 
 {% endblock %}

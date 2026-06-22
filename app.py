@@ -1,7 +1,10 @@
 from flask import Flask, render_template, request, redirect
+from flask import session
 import sqlite3
 
 app = Flask(__name__)
+
+app.secret_key = "gymtracker-secret-key"
 
 WORKOUTS = {
 
@@ -44,6 +47,36 @@ WORKOUTS = {
 }
 
 }
+
+# login
+@app.route("/login", methods=["GET", "POST"])
+def login():
+
+    if request.method == "POST":
+
+        user_id = int(
+            request.form["user_id"]
+        )
+
+        session["user_id"] = user_id
+
+        if user_id == 1:
+            session["username"] = "Lotte"
+        else:
+            session["username"] = "Jay"
+
+        return redirect("/")
+
+    return render_template("login.html")
+
+# logout
+@app.route("/logout")
+def logout():
+
+    session.clear()
+
+    return redirect("/login")
+
 # Database helper
 def get_db():
     conn = sqlite3.connect("gym.db")
@@ -53,6 +86,10 @@ def get_db():
 # Home page
 @app.route("/")
 def home():
+
+    if "user_id" not in session:
+        return redirect("/login")
+
     return render_template("home.html")
 
 # Weigh-in page
@@ -67,8 +104,17 @@ def weighin():
         cursor = conn.cursor()
 
         cursor.execute(
-            "INSERT INTO weighins (weight) VALUES (?)",
-            (weight,)
+            """INSERT INTO weighins
+            (
+                weight,
+                user_id
+            )
+            VALUES (?, ?)
+            """,
+            (
+                weight,
+                session["user_id"]
+            )
         )
 
         conn.commit()
@@ -93,10 +139,55 @@ def workout_page(workout_type):
 
     exercises = WORKOUTS[workout_type]
 
+    conn = get_db()
+    cursor = conn.cursor()
+
+    previous_data = {}
+
+    cursor.execute("""
+        SELECT id
+        FROM workouts
+        WHERE workout_type = ?
+        AND user_id = ?
+        ORDER BY id DESC
+        LIMIT 1
+    """,
+    (
+        workout_type,
+        session["user_id"]
+    ))
+
+    last_workout = cursor.fetchone()
+
+    if last_workout:
+
+        cursor.execute("""
+            SELECT *
+            FROM exercise_sets
+            WHERE workout_id = ?
+            ORDER BY exercise_name, set_number
+        """, (last_workout["id"],))
+
+        sets = cursor.fetchall()
+
+        for s in sets:
+
+            exercise = s["exercise_name"]
+
+            if exercise not in previous_data:
+                previous_data[exercise] = []
+
+            previous_data[exercise].append(
+                f'{s["weight"]} x {s["reps"]}'
+            )
+
+    conn.close()
+
     return render_template(
         "workout.html",
         workout_type=workout_type,
-        exercises=exercises
+        exercises=exercises,
+        previous_data=previous_data
     )
 
 # save workout route
@@ -109,8 +200,18 @@ def save_workout():
     cursor = conn.cursor()
 
     cursor.execute(
-        "INSERT INTO workouts (workout_type) VALUES (?)",
-        (workout_type,)
+        """
+        INSERT INTO workouts
+        (
+            workout_type,
+            user_id
+        )
+        VALUES (?, ?)
+        """,
+        (
+            workout_type,
+            session["user_id"]
+        )
     )
 
     workout_id = cursor.lastrowid
@@ -153,7 +254,7 @@ def save_workout():
     conn.commit()
     conn.close()
 
-    return redirect("/")
+    return render_template("saved.html")
 
 # History page
 @app.route("/history")
@@ -165,16 +266,18 @@ def history():
     cursor.execute("""
     SELECT *
     FROM weighins
+    WHERE user_id = ?
     ORDER BY timestamp DESC
-    """)
+    """, (session["user_id"],))
 
     weights = cursor.fetchall()
 
     cursor.execute("""
     SELECT *
     FROM workouts
+    WHERE user_id = ?
     ORDER BY workout_date DESC
-    """)
+    """, (session["user_id"],))
 
     workouts = cursor.fetchall()
 
@@ -184,6 +287,51 @@ def history():
         "history.html",
         weights=weights,
         workouts=workouts
+    )
+
+# workout history
+@app.route("/workout_history/<int:workout_id>")
+def workout_history(workout_id):
+
+    conn = get_db()
+    cursor = conn.cursor()
+
+    cursor.execute("""
+        SELECT *
+        FROM workouts
+        WHERE id = ?
+    """, (workout_id,))
+
+    workout = cursor.fetchone()
+
+    cursor.execute("""
+        SELECT *
+        FROM exercise_sets
+        WHERE workout_id = ?
+        ORDER BY exercise_name, set_number
+    """, (workout_id,))
+
+    sets = cursor.fetchall()
+
+    conn.close()
+
+    exercises = {}
+
+    for s in sets:
+
+        exercise = s["exercise_name"]
+
+        if exercise not in exercises:
+            exercises[exercise] = []
+
+        exercises[exercise].append(
+            f'{s["weight"]}kg × {s["reps"]}'
+        )
+
+    return render_template(
+        "workout_history.html",
+        workout=workout,
+        exercises=exercises
     )
 
 if __name__ == "__main__":

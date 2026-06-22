@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<h2>{{ workout["workout_type"] }}</h2>
+
+<p>
+{{ workout["workout_date"] }}
+</p>
+
+<hr>
+
+{% for exercise, sets in exercises.items() %}
+
+<h4>{{ exercise }}</h4>
+
+<ul>
+
+{% for s in sets %}
+<li>{{ s }}</li>
+{% endfor %}
+
+</ul>
+
+{% endfor %}
+
+{% endblock %}
